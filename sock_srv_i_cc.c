@@ -11,7 +11,7 @@
 
 void handleConnection(int newsockfd){
 	int n;
-	char buffer[TAM];
+	char buffer [TAM];
 
 	while (1) {
 				memset( buffer, 0, TAM );
@@ -24,6 +24,17 @@ void handleConnection(int newsockfd){
 
 				printf( "PROCESO %d. ", getpid() );
 				printf( "Recibí: %s", buffer );
+
+				switch (atoi(buffer))
+				{
+				case 1:
+					printf("Llego un 1");
+					break;
+				
+				default:
+					printf("Llego cualquier otra cosa");
+					break;
+				}
 
 				n = write( newsockfd, "Obtuve su mensaje", 18 );
 				if ( n < 0 ) {

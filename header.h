@@ -11,7 +11,7 @@
 
 #define PORT 9878
 #define TAM 256
-#define BUFFER 512
+#define BUFFER 1500
 
 #endif /* MODULE_H */
 

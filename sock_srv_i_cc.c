@@ -51,9 +51,13 @@ void recFile(int newsockfd){
 		perror("open fail");
 		exit (3);
 	}
+	
 	bzero(buffer,BUFFER);
+
+	clock_t begin = clock();
 	
 	n=recv(newsockfd,buffer, BUFFER,0);
+
 	while(n) {
 		if(n==-1){
 			perror("recv fail");
@@ -67,6 +71,9 @@ void recFile(int newsockfd){
 		bzero(buffer,BUFFER);
 		n=recv(newsockfd,buffer,BUFFER,0);
 	}
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Time rec file: %f sec\n", time_spent);
 	close(fd);
 }
 

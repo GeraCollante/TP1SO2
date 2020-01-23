@@ -6,26 +6,38 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
+#include <time.h>
 #include <fcntl.h>
 #include "header.h"
 
 struct sockaddr_in serv_addr;
 
-void writeSock(int sockfd, char * cadena)
+/**
+ * @brief Write to the socket
+ * 
+ * @param sockfd 
+ * @param str 
+ */
+void writeSock(int sockfd, char * str)
 {
 	int n;
 	char buffer [TAM];
 	memset( buffer, '\0', TAM );
-	printf("Entre acá\n");
-	strcpy(buffer, cadena);
+	strcpy(buffer, str);
 	printf("%s", buffer);
 	n = write( sockfd, buffer, strlen(buffer) );
-	if ( n < 0 ) {
-		perror( "escritura de socket" );
-		exit( 1 );
+	if ( n < 0 ){
+		perror( "socket write" );
+		exit(1);
 	}
 }
 
+/**
+ * @brief Read socket
+ * 
+ * @param sockfd 
+ * @return char* 
+ */
 char * readSock(int sockfd)
 {
 	int n;
@@ -33,19 +45,24 @@ char * readSock(int sockfd)
 	memset( buffer, '\0', TAM );
 	char * ptrBuff;
 	int keylen = strlen(buffer) + 1;
-	// Copy password into dynamically allocated storage
+	// We create dynamic pointer, if not, it gives core errors
 	ptrBuff = (char*)malloc(keylen * sizeof(char));
-	// printf("rdSock");
-	// memset( buffer, '\0', TAM );
 	n = read( sockfd, buffer, TAM);
 	if ( n < 0 ) {
 		perror( "lectura de socket" );
-		exit( 1 );
+		exit(1);
 	}
 	strcpy(ptrBuff, buffer);
 	printf("%s", ptrBuff);
     return ptrBuff;
 }
+
+/**
+ * @brief Send file
+ * 
+ * @param sockfd 
+ * @param filename 
+ */
 
 void sendFile(int sockfd, char * filename){	
 	char buffer[BUFFER];
@@ -60,6 +77,7 @@ void sendFile(int sockfd, char * filename){
 	}
 
 	bzero(&buffer,BUFFER);
+	// clock_t begin = clock();
 
 	n=read(fd,buffer,BUFFER);
 	while(n)
@@ -74,14 +92,21 @@ void sendFile(int sockfd, char * filename){
 			exit(EXIT_FAILURE);
 		}
 		count+=m;
-		//fprintf(stdout,"----\n%s\n----\n",buffer);
+		// fprintf(stdout,"----\n%s\n----\n",buffer);
 		bzero(buffer,BUFFER);
 		n=read(fd,buffer,BUFFER);
 	}
+	// clock_t end = clock();
+	// double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	// printf("Time send file: %f sec\n", time_spent);
 }
 
 
-
+/**
+ * @brief Handle the connection between client and server
+ * 
+ * @param sockfd 
+ */
 void handleConnection(int sockfd){
 	char buffer[TAM];
 	int terminar = 0;
@@ -90,18 +115,11 @@ void handleConnection(int sockfd){
 	int conexion;
 	int fd;
 
-	const char * cadena;
-
 	while(1) {
 		// printf( "Ingrese el mensaje a transmitir: " );
 		// memset( buffer, '\0', TAM );
 		// fgets( buffer, TAM-1, stdin );
 
-		// n = write( sockfd, buffer, strlen(buffer) );
-		// if ( n < 0 ) {
-		// 	perror( "escritura de socket" );
-		// 	exit( 1 );
-		// }
 
 		// Verificando si se escribió: fin
 		// buffer[strlen(buffer)-1] = '\0';
@@ -110,8 +128,6 @@ void handleConnection(int sockfd){
 		// }
 		strcpy(buffer, readSock(sockfd));
 		printf("Server %s\n", buffer);
-
-		// writeSock(sockfd, buffer);
 
 		switch (atoi(buffer))
 		{
@@ -153,16 +169,16 @@ void handleConnection(int sockfd){
 	}
 }
 
+
+/**
+ * @brief A TCP socket is created
+ * 
+ */
 void createSockTCP(){
 	int sockfd, puerto, n;
 	struct hostent *server;
 	int terminar = 0;
 	char red [100] = "192.168.0.106";
-
-	// if ( argc < 3 ) {
-	// 	fprintf( stderr, "Uso %s host puerto\n", argv[0]);
-	// 	exit( 0 );
-	// }
 
 	puerto = PORT;
 	sockfd = socket( AF_INET, SOCK_STREAM, 0 );

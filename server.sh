@@ -1,3 +1,3 @@
 clear
-gcc -o server sock_srv_i_cc.c
+gcc -o server server_tcp.c
 ./server

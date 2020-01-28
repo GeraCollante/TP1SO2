@@ -10,6 +10,32 @@
 #include <unistd.h>
 #include "header.h"
 
+int firmware;
+struct sockaddr_in serv_addr;
+
+void updateFirmware(){
+    // firmware = 1;
+	int firmAux;
+    FILE *fptr;
+    if ((fptr = fopen("firmware","rw")) == NULL){
+       printf("Error! opening file");
+       // Program exits if the file pointer returns NULL.
+       exit(1);
+    }
+	fscanf(fptr, "%i", &firmAux);
+	printf("Old firmware: %i\n", firmAux);
+	firmware = firmAux + 1;
+	printf("New firmware: %i\n", firmware);
+    fclose(fptr);
+	if ((fptr = fopen("firmware","w")) == NULL){
+       printf("Error! opening file");
+       // Program exits if the file pointer returns NULL.
+       exit(1);
+    }
+	fprintf(fptr, "%i", firmware);
+	fclose(fptr);
+}
+
 /**
  * @brief 
  * 
@@ -28,6 +54,43 @@ void writeSock(int sockfd, char * cadena)
 		perror( "escritura de socket" );
 		exit( 1 );
 	}
+}
+
+void sendFile(int sockfd, char * filename){	
+	char buffer[BUFFER];
+	int l=sizeof(struct sockaddr_in);
+    off_t count=0, m,sz;//long
+	long int n;
+	int fd;
+
+	if ((fd = open(filename,O_RDONLY))==-1){
+		perror("open fail");
+		exit(EXIT_FAILURE);
+	}
+
+	bzero(&buffer,BUFFER);
+	// clock_t begin = clock();
+
+	n=read(fd,buffer,BUFFER);
+	while(n)
+	{
+		if(n==-1){
+			perror("read fails");
+			exit(EXIT_FAILURE);
+		}
+		m=sendto(sockfd,buffer,n,0,(struct sockaddr*)&serv_addr,l);
+		if(m==-1){
+			perror("send error");
+			exit(EXIT_FAILURE);
+		}
+		count+=m;
+		// fprintf(stdout,"----\n%s\n----\n",buffer);
+		bzero(buffer,BUFFER);
+		n=read(fd,buffer,BUFFER);
+	}
+	// clock_t end = clock();
+	// double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	// printf("Time send file: %f sec\n", time_spent);
 }
 
 void recFile(int newsockfd){
@@ -100,6 +163,7 @@ char * readSock(int sockfd)
 void handleConnection(int newsockfd){
 	int n;
 	char buffer [TAM];
+	char filename [100] = "sock_cli_i_cc.c";
 
 	while (1) {
 				// memset( buffer, 0, TAM );
@@ -116,6 +180,9 @@ void handleConnection(int newsockfd){
 				switch (atoi(buffer))
 				{
 				case 1:
+					sendFile(newsockfd, filename);
+					break;
+				case 2:
 					recFile(newsockfd);
 					break;
 				//Imprimir parametros
@@ -196,7 +263,7 @@ void handleConnection(int newsockfd){
 
 void createSocketTCP(){
 	int sockfd, newsockfd, puerto, clilen, pid;
-	struct sockaddr_in serv_addr, cli_addr;
+	struct sockaddr_in cli_addr;
 	int n;
 
 	// if ( argc < 2 ) {
@@ -221,7 +288,7 @@ void createSocketTCP(){
 		exit( 1 );
 	}
 
-        printf( "Proceso: %d - socket disponible: %d\n", getpid(), ntohs(serv_addr.sin_port) );
+	printf( "Proceso: %d - socket disponible: %d\n", getpid(), ntohs(serv_addr.sin_port) );
 
 	listen( sockfd, 5 );
 	clilen = sizeof( cli_addr );
@@ -252,6 +319,7 @@ void createSocketTCP(){
 
 int main( int argc, char *argv[] ) {
 	
+	updateFirmware();
 	createSocketTCP();
 	
 	return 0; 

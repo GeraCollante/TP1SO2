@@ -1,16 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h> 
-#include <time.h>
-#include <fcntl.h>
-#include "header.h"
+dr;
 
-struct sockaddr_in serv_addr;
+int firmware;
+
+void setFirmware(){
+	int firmAux;
+    FILE *fptr;
+    if ((fptr = fopen("firmware","rw")) == NULL){
+       printf("Error! opening file");
+       // Program exits if the file pointer returns NULL.
+       exit(1);
+    }
+	fscanf(fptr, "%i", &firmAux);
+	firmware = firmAux;
+	printf("version: %i\n", firmware);
+	fclose(fptr);
+}
 
 /**
  * @brief Write to the socket
@@ -55,6 +59,54 @@ char * readSock(int sockfd)
 	strcpy(ptrBuff, buffer);
 	printf("%s", ptrBuff);
     return ptrBuff;
+}
+
+void recFile(int newsockfd){
+	//Processing the file name with the date
+	char buffer[BUFFER],filename[256];
+	time_t intps;
+	long int n, m,count=0;
+	struct tm* tmi;
+	int fd;
+	
+	//Processing the file name with the date
+	bzero(filename,256);
+	intps = time(NULL);
+	tmi = localtime(&intps);
+	bzero(filename,256);
+	sprintf(filename, "%s", "codigo.c");
+	// sprintf(filename,"clt.%d.%d.%d.%d.%d.%d",tmi->tm_mday,tmi->tm_mon+1,1900+tmi->tm_year,tmi->tm_hour,tmi->tm_min,tmi->tm_sec);
+	printf("Creating the copied output file : %s\n",filename);
+	
+	if ((fd=open(filename,O_CREAT|O_WRONLY,0600))==-1)
+	{
+		perror("open fail");
+		exit (3);
+	}
+	
+	bzero(buffer,BUFFER);
+
+	clock_t begin = clock();
+	
+	n=recv(newsockfd,buffer, BUFFER,0);
+
+	while(n) {
+		if(n==-1){
+			perror("recv fail");
+			exit(5);
+		}
+		if((m=write(fd,buffer,n))==-1){
+			perror("write fail");
+			exit (6);
+		}
+		count=count+m;
+		bzero(buffer,BUFFER);
+		n=recv(newsockfd,buffer,BUFFER,0);
+	}
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Time rec file: %f sec\n", time_spent);
+	close(fd);
 }
 
 /**
@@ -131,14 +183,16 @@ void handleConnection(int sockfd){
 
 		switch (atoi(buffer))
 		{
-		case 1:
-			printf("Llego un 1");
+		case 2:
+			printf("Sending Scan to Earth Station");
 			char filename [100] = "20190861730_GOES16-ABI-FD-GEOCOLOR-10848x10848.jpg";
 			sendFile(sockfd, filename);
 			exit(0);
 			break;
-		case 2:
+		case 1:
 			printf("Llego un 2");
+			recFile(sockfd);
+			system("gcc -o codigo codigo.c");
 			exit(0);
 		case 3:
 			printf("Llego un 3");
@@ -207,6 +261,23 @@ void createSockTCP(){
 int main( int argc, char *argv[] ) {
 	int sockfd;
 
+	setFirmware();
+	createSockTCP();
+	
+	return 0;
+} 
+r *)&serv_addr, sizeof(serv_addr ) ) < 0 ) {
+		perror( "conexion" );
+		exit( 1 );
+	}
+
+	handleConnection(sockfd);
+}
+
+int main( int argc, char *argv[] ) {
+	int sockfd;
+
+	setFirmware();
 	createSockTCP();
 	
 	return 0;

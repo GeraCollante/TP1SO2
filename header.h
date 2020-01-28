@@ -9,7 +9,7 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#define PORT 9878
+#define PORT 9875
 #define TAM 256
 #define BUFFER 1500
 

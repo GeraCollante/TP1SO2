@@ -1,3 +1,3 @@
 clear
-gcc -o cliente sock_cli_i_cc.c
+gcc -o cliente cliente_tcp.c
 ./cliente

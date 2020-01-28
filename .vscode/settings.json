@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "in.h": "c"
+        "in.h": "c",
+        "types.h": "c",
+        "header.h": "c",
+        "client_tcp.h": "c"
     }
 }

@@ -1,17 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <string.h>
-#include <sys/types.h> 
-#include <time.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
 #include "header.h"
+#include "server_tcp.h"
 
-int firmware;
-struct sockaddr_in serv_addr;
+int main( int argc, char *argv[] ) {
+	
+	updateFirmware();
+	createSocketTCP();
+	
+	return 0; 
+}
 
 void updateFirmware(){
     // firmware = 1;
@@ -316,11 +312,3 @@ void createSocketTCP(){
 		}
 	}
 }
-
-int main( int argc, char *argv[] ) {
-	
-	updateFirmware();
-	createSocketTCP();
-	
-	return 0; 
-} 

@@ -1,18 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h> 
-#include <time.h>
-#include <fcntl.h>
+#include "client_tcp.h"
 #include "header.h"
 
-struct sockaddr_in serv_addr;
+int main( int argc, char *argv[] ) {
+	int sockfd;
 
-int firmware;
+	setFirmware();
+	createSockTCP();
+	
+	return 0;
+} 
 
 void setFirmware(){
 	int firmAux;
@@ -234,7 +230,6 @@ void handleConnection(int sockfd){
 	}
 }
 
-
 /**
  * @brief A TCP socket is created
  * 
@@ -268,12 +263,3 @@ void createSockTCP(){
 
 	handleConnection(sockfd);
 }
-
-int main( int argc, char *argv[] ) {
-	int sockfd;
-
-	setFirmware();
-	createSockTCP();
-	
-	return 0;
-} 

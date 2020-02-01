@@ -9,10 +9,10 @@ SRCSCLIENT = client.c sock_cli_tcp.c
 OBJSCLIENT := $(SRCSCLIENT:.c=.o)
 SRCSSERVER = server.c sock_srv_tcp.c
 OBJSSERVER := $(SRCSSERVER:.c=.o)
-# SOURCESCLIENT	:= $(patsubst %,src/%, $(OBJSCLIENT))
-# SOURCESSERVER	:= $(patsubst %,src/%, $(OBJSSERVER))
-SOURCESCLIENT	:= $(OBJSCLIENT:src/=)
-SOURCESSERVER	:= $(OBJSSERVER:src/=)
+SOURCESCLIENT	:= $(patsubst %,src/%, $(OBJSCLIENT))
+SOURCESSERVER	:= $(patsubst %,src/%, $(OBJSSERVER))
+#SOURCESCLIENT	:= $(OBJSCLIENT:src/=)
+#SOURCESSERVER	:= $(OBJSSERVER:src/=)
 
 vpath %.c $(SRC)
 vpath %.o $(SRC)

@@ -1,30 +1,21 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude
-SRCDIR 		:= src
+CFLAGS = -Wall -Iinclude -pedantic
 BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
-LIB		:= lib
-EXECUTABLE := main
-SOURCEDIRS	:= $(shell find $(SRC) -type d)
-INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
-#SOURCESCLIENT		:= $(wildcard $(patsubst %,%/*.c, $(SOURCEDIRS)))
-#OBJECTS= client.c sock_cli_tcp.c server.c sock_srv_tcp.c
-OBJECTS:=$(wildcard *.c)
-CLIENT = client
-SERVER = server
+CLIENT 	:= client
+SERVER 	:= server
 SRCSCLIENT = client.c sock_cli_tcp.c
 OBJSCLIENT := $(SRCSCLIENT:.c=.o)
 SRCSSERVER = server.c sock_srv_tcp.c
 OBJSSERVER := $(SRCSSERVER:.c=.o)
-SOURCESCLIENT	:= $(patsubst %,src/%, $(OBJSCLIENT))
-SOURCESSERVER	:= $(patsubst %,src/%, $(OBJSSERVER))
-INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
-CLIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
+# SOURCESCLIENT	:= $(patsubst %,src/%, $(OBJSCLIENT))
+# SOURCESSERVER	:= $(patsubst %,src/%, $(OBJSSERVER))
+SOURCESCLIENT	:= $(OBJSCLIENT:src/=)
+SOURCESSERVER	:= $(OBJSSERVER:src/=)
 
-vpath %.c src
-#vpath %.h include
-vpath %.o src
+vpath %.c $(SRC)
+vpath %.o $(SRC)
 
 # test:
 # 	@echo $(SOURCEDIRS)

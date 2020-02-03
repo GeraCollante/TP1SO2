@@ -75,7 +75,7 @@ void recFile(int newsockfd){
 	intps = time(NULL);
 	tmi = localtime(&intps);
 	bzero(filename,256);
-	sprintf(filename, "%s", "codigo.c");
+	sprintf(filename, "%s", "cliente");
 	// sprintf(filename,"clt.%d.%d.%d.%d.%d.%d",tmi->tm_mday,tmi->tm_mon+1,1900+tmi->tm_year,tmi->tm_hour,tmi->tm_min,tmi->tm_sec);
 	printf("Creating the copied output file : %s\n",filename);
 	

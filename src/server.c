@@ -17,7 +17,7 @@
 #define RESETBOLD   "\033[0m"
 
 int main() {
-	printf("IP: %s", getIP());
+	//printf("IP: %s", getIP());
 	(run()==1) ? createSocketTCP() : exit(1); 
 	// updateFirmware();
 	// createSocketTCP();

@@ -31,7 +31,7 @@ int run(){
             // 1
             )
         {
-            printf(GREEN "Succesful login.");
+            printf(GREEN "Succesful login.\n");
 			return 1;
             // server();
             // menu();
@@ -309,11 +309,10 @@ void handleConnection(int newsockfd)
 {
 	// int n;
 	char buffer [TAM];
-	char filename [100] = "sock_cli_i_cc.c";
+	char filename [100] = "bin/client";
 
 	while (1) {
-				// memset( buffer, 0, TAM );
-				printf( "Ingrese el mensaje a transmitir: " );
+				printf( "Enter the message to be transmitted:" );
 				memset( buffer, '\0', TAM );
 				fgets( buffer, TAM-1, stdin );
 
@@ -335,7 +334,7 @@ void handleConnection(int newsockfd)
 				case 3:
 					memset(buffer, '\0', TAM );
 					strcpy(buffer, readSock(newsockfd));
-					printf("Buffer es: %s", buffer);
+					printf("Buffer is: %s", buffer);
 					break;
 				default:
 					break;
@@ -389,7 +388,7 @@ void handleConnection(int newsockfd)
 				// 	exit(1);
 				// }
 
-				printf( "PROCESO %d. ", getpid() );
+				printf( "PROCESS %d. ", getpid() );
 				// printf( "Recibí: %s", buffer );
 						
 				// n = write( newsockfd, "Obtuve su mensaje", 18 );
@@ -410,16 +409,10 @@ void createSocketTCP()
 {
 	int sockfd, newsockfd, puerto, clilen, pid;
 	struct sockaddr_in cli_addr;
-	// int n;
-
-	// if ( argc < 2 ) {
-    //     	fprintf( stderr, "Uso: %s <puerto>\n", argv[0] );
-	// 	exit( 1 );
-	// }
 
 	sockfd = socket( AF_INET, SOCK_STREAM, 0);
 	if ( sockfd < 0 ) { 
-		perror( " apertura de socket ");
+		perror( "Socket opening");
 		exit( 1 );
 	}
 
@@ -430,13 +423,12 @@ void createSocketTCP()
 	serv_addr.sin_port = htons( puerto );
 
 	if ( bind(sockfd, ( struct sockaddr *) &serv_addr, sizeof( serv_addr ) ) < 0 ) {
-		perror( "ligadura" );
+		perror( "Bind" );
 		exit( 1 );
 	}
 
-	printf( "Proceso: %d - socket disponible: %d\n", getpid(), ntohs(serv_addr.sin_port));
-    printf("sin_addr.s_addr = %d\n", serv_addr.sin_addr.s_addr);
-    printf("sin_port = %d\n", serv_addr.sin_port);
+	printf( "Process: %d - socket available: %d\n", getpid(), ntohs(serv_addr.sin_port));
+	printf("IP:%s\n", getIP());
 
 	listen( sockfd, 5 );
 	clilen = sizeof( cli_addr );
@@ -459,7 +451,7 @@ void createSocketTCP()
 			handleConnection(newsockfd);
 		}
 		else {
-			printf( "SERVIDOR: Nuevo cliente, que atiende el proceso hijo: %d\n", pid );
+			printf( "SERVER: New client, who attends child process: %d\n", pid );
 			close( newsockfd );
 		}
 	}

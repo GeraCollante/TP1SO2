@@ -3,6 +3,7 @@
         "in.h": "c",
         "types.h": "c",
         "header.h": "c",
-        "client_tcp.h": "c"
+        "client_tcp.h": "c",
+        "socket.h": "c"
     }
 }

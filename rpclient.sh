@@ -1,0 +1,1 @@
+scp /home/gerac/Facultad/SO2/TP1/bin/client pi@raspberrypi.local:/home/pi

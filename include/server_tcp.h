@@ -30,5 +30,6 @@ void recFile(int newsockfd);
 char * readSock(int sockfd);
 void handleConnection(int newsockfd);
 void createSocketTCP();
+const char * getIP();
 
 #endif /* SERVER_H */

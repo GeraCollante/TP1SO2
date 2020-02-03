@@ -1,18 +1,29 @@
-CC = gcc
-CFLAGS = -Wall -Iinclude -pedantic
-BIN		:= bin
-SRC		:= src
-INCLUDE	:= include
-CLIENT 	:= client
-SERVER 	:= server
-SRCSCLIENT = client.c sock_cli_tcp.c
-OBJSCLIENT := $(SRCSCLIENT:.c=.o)
-SRCSSERVER = server.c sock_srv_tcp.c
-OBJSSERVER := $(SRCSSERVER:.c=.o)
+CC 			:= gcc
+RP 			:= arm-linux-gnueabihf-gcc
+CFLAGS 		:= -Iinclude
+BIN			:= bin
+SRC			:= src
+INCLUDE		:= include
+CLIENT 		:= client
+SERVER 		:= server
+
+##
+SRCSCLIENT 	:= client.c sock_cli_tcp.c
+
+##
+OBJSCLIENT 	:= $(SRCSCLIENT:.c=.o)
+
+SRCSSERVER 	:= server.c sock_srv_tcp.c
+OBJSSERVER 	:= $(SRCSSERVER:.c=.o)
+
+##
 SOURCESCLIENT	:= $(patsubst %,src/%, $(OBJSCLIENT))
+
 SOURCESSERVER	:= $(patsubst %,src/%, $(OBJSSERVER))
-#SOURCESCLIENT	:= $(OBJSCLIENT:src/=)
-#SOURCESSERVER	:= $(OBJSSERVER:src/=)
+SRCCLIENT1 := $(patsubst %,src/%, client.c)
+SRCCLIENT2 := $(patsubst %,src/%, sock_cli_tcp.c)
+OBJCLIENT1 := $(SRCCLIENT1:.c=.o)
+OBJCLIENT2 := $(SRCCLIENT2:.c=.o)
 
 vpath %.c $(SRC)
 vpath %.o $(SRC)
@@ -62,10 +73,17 @@ clean:
 run: all
 	./$(BIN)/$(EXECUTABLE)
 
+# $(BIN)/$(CLIENT): $(SOURCESCLIENT)
+# 	@echo "Llegue cliente"
+# 	$(CC) $(CFLAGS) $^ -o $@
+
 $(BIN)/$(CLIENT): $(SOURCESCLIENT)
-	@echo "Llegue cliente"
-	$(CC) $(CFLAGS) $^ -o $@
+	@echo "Cross-compile" 
+	$(RP) $(CFLAGS) -c -o $(OBJCLIENT1) $(SRCCLIENT1)
+	$(RP) $(CFLAGS) -c -o $(OBJCLIENT2) $(SRCCLIENT2)
+	$(RP) $(CFLAGS) $(OBJCLIENT1) $(OBJCLIENT2) -o $@
 
 $(BIN)/$(SERVER) : $(SOURCESSERVER)
 	@echo "Llegue server"
 	$(CC) $(CFLAGS) $^ -o $@
+

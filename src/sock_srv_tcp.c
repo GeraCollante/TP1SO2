@@ -3,7 +3,10 @@
 #include "hash-string.h"
 #include <stdio.h>
 #include <strings.h>
+#include <netdb.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
 
 // KEYS
 #define HASH 3378490201
@@ -18,14 +21,6 @@
 #define RESETCLR    "\x1b[0m"
 #define BOLD        "\033[1m"
 #define RESETBOLD   "\033[0m"
-
-// int main( int argc, char *argv[] ) {
-// 	(run()==1) ? createSocketTCP() : exit(1); 
-// 	// updateFirmware();
-// 	// createSocketTCP();
-	
-// 	return 0; 
-// }
 
 int run(){
     int attemps = 0;
@@ -242,6 +237,54 @@ void recFile(int newsockfd)
 	close(fd);
 }
 
+const char * getIP(){
+    struct ifaddrs *ifaddr, *ifa;
+    int family, s, n;
+    char host[NI_MAXHOST];
+    char * net = "enp3s0";
+	char * ptrBuff;
+	int keylen = strlen(host) + 1;
+	ptrBuff = (char*)malloc(keylen * sizeof(char));
+	memset( host, '\0', TAM );
+
+    if (getifaddrs(&ifaddr) == -1) {
+        perror("getifaddrs");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Walk through linked list, maintaining head pointer so we
+        can free list later */
+
+    for (ifa = ifaddr, n = 0; ifa != NULL; ifa = ifa->ifa_next, n++) {
+        if (ifa->ifa_addr == NULL)
+            continue;
+
+        family = ifa->ifa_addr->sa_family;
+
+        /* Display interface name and family (including symbolic
+            form of the latter for the common families) */
+
+        char * netname= ifa->ifa_name;
+        if(strcmp(netname, net)==0){
+            
+            if (family == AF_INET) {
+                s = getnameinfo(ifa->ifa_addr,
+                        (family == AF_INET) ? sizeof(struct sockaddr_in) :
+                                                sizeof(struct sockaddr_in6),
+                        host, NI_MAXHOST,
+                        NULL, 0, NI_NUMERICHOST);
+                if (s != 0) {
+                    printf("getnameinfo() failed: %s\n", gai_strerror(s));
+                    exit(EXIT_FAILURE);
+                }
+                strcpy(ptrBuff, host);
+            }
+        }
+    }
+    freeifaddrs(ifaddr);
+    return ptrBuff;
+}
+
 char * readSock(int sockfd)
 {
 	int n;
@@ -391,7 +434,9 @@ void createSocketTCP()
 		exit( 1 );
 	}
 
-	printf( "Proceso: %d - socket disponible: %d\n", getpid(), ntohs(serv_addr.sin_port) );
+	printf( "Proceso: %d - socket disponible: %d\n", getpid(), ntohs(serv_addr.sin_port));
+    printf("sin_addr.s_addr = %d\n", serv_addr.sin_addr.s_addr);
+    printf("sin_port = %d\n", serv_addr.sin_port);
 
 	listen( sockfd, 5 );
 	clilen = sizeof( cli_addr );

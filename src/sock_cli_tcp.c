@@ -242,7 +242,8 @@ void createSockTCP(){
 		exit( 1 );
 	}
 
-	server = gethostbyname("192.168.0.106");
+	//server = gethostbyname("192.168.0.106");
+	server = gethostbyname("169.254.116.175");
 	if (server == NULL) {
 		fprintf( stderr,"Error, no existe el host\n" );
 		exit( 0 );

@@ -1,91 +1,49 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
-#include <string.h>
+// Server side implementation of UDP client-server model 
 
-#define TAM 80
+#include "sock_srv_udp.h"
+  
+struct sockaddr_in servaddr, cliaddr;
 
-int main(int argc, char *argv[]) {
-	int sockfd, newsockfd, servlen, clilen, n, pid;
-	struct sockaddr_un  cli_addr, serv_addr;
-	char buffer[TAM];
+void handleUDP(){
+    int sockfd;
+    sockfd = createSockUDP();
+    recInfo(sockfd);
+}
 
-        /* Se toma el nombre del socket de la línea de comandos */
-        if( argc != 2 ) {
-                printf( "Uso: %s <nombre_de_socket>\n", argv[0] );
-                exit( 1 );
-        }
+int createSockUDP(){
+    int sockfd;
+    // Creating socket file descriptor 
+    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
+        perror("socket creation failed"); 
+        exit(EXIT_FAILURE); 
+    } 
 
-	if ( ( sockfd = socket( AF_UNIX, SOCK_STREAM, 0) ) < 0 ) {
-		perror( "creación de  socket");
-		exit(1);
-	}
+    memset(&servaddr, 0, sizeof(servaddr)); 
+    memset(&cliaddr, 0, sizeof(cliaddr)); 
+      
+    // Filling server information 
+    servaddr.sin_family         = AF_INET; // IPv4 
+    servaddr.sin_addr.s_addr    = INADDR_ANY; 
+    servaddr.sin_port           = htons(PORT); 
+      
+    // Bind the socket with the server address 
+    if ( bind(sockfd, (const struct sockaddr *)&servaddr,  
+            sizeof(servaddr)) < 0 ) 
+    { 
+        perror("bind failed"); 
+        exit(EXIT_FAILURE); 
+    } 
+    return sockfd;
+}
 
-        /* Remover el nombre de archivo si existe */
-        unlink ( argv[1] );
-
-	memset( &serv_addr, 0, sizeof(serv_addr) );
-	serv_addr.sun_family = AF_UNIX;
-	strcpy( serv_addr.sun_path, argv[1] );
-	servlen = strlen(serv_addr.sun_path) + sizeof(serv_addr.sun_family);
-
-	if( bind( sockfd,(struct sockaddr *)&serv_addr,servlen )<0 ) {
-		perror( "ligadura" ); 
-		exit(1);
-	}
-
-        printf( "Proceso: %d - socket disponible: %s\n", getpid(), serv_addr.sun_path );
-
-	listen( sockfd, 5 );
-	clilen = sizeof( cli_addr );
-
-        while ( 1 ) {
-                newsockfd = accept( sockfd, (struct sockaddr *) &cli_addr, &clilen );
-                if ( newsockfd < 0 ) {
-                        perror( "accept" );
-                        exit( 1 );
-                }
-
-                pid = fork();
-                if ( pid < 0 ) {
-                        perror( "fork" );
-                        exit( 1 );
-                }
-
-                if ( pid == 0 ) {        // proceso hijo
-                        close( sockfd );
-
-			while(1) { 
-	                        memset( buffer, 0, TAM );
-
-       		                n = read( newsockfd, buffer, TAM-1 );
-	                        if ( n < 0 ) {
-					perror( "lectura de socket" );
-               		                exit(1);
-                        	}
-
-                        	printf( "PROCESO: %d. ", getpid() );
-	                        printf( "Recibí: %s", buffer );
-
-				n = write( newsockfd, "Obtuve su mensaje", 18 );
-				if ( n < 0 ) {
-					perror( "escritura en socket" );
-					exit( 1 );
-				}
-	                        // Verificación de si hay que terminar
-				buffer[strlen(buffer)-1] = '\0';
-				if( !strcmp( "fin", buffer ) ) {
-					printf( "PROCESO %d. Como recibí 'fin', termino la ejecución.\n\n", getpid() );
-					exit(0);
-				}
-			}
-                }
-                else {
-			printf( "SERVIDOR: Nuevo cliente, que atiende el proceso hijo: %d\n", pid );
-                        close( newsockfd );
-		}
-        }
-	return 0;
+void recInfo(int sockfd){
+    char buffer[MAXLINE]; 
+    int len, n; 
+    len = sizeof(cliaddr);  //len is value/resuslt 
+  
+    n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
+                MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
+                &len); 
+    buffer[n] = '\0';
+    printf("Client: %s", buffer);
 }

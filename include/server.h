@@ -25,9 +25,9 @@ int run();
 int login();
 unsigned int string_hash(void *string);
 void updateFirmware();
-void writeSock(int sockfd, char * cadena);
+void writeSockTCP(int sockfd, char * cadena);
 void recFile(int newsockfd);
-char * readSock(int sockfd);
+char * readSockTCP(int sockfd);
 void handleConnection(int newsockfd);
 void createSocketTCP();
 

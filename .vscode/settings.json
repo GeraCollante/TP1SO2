@@ -4,6 +4,9 @@
         "types.h": "c",
         "header.h": "c",
         "client_tcp.h": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "server_tcp.h": "c",
+        "hash-string.h": "c",
+        "sock_srv_udp.h": "c"
     }
 }

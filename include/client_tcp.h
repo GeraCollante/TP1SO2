@@ -14,14 +14,15 @@
 #include <fcntl.h>
 
 struct sockaddr_in serv_addr;
+struct sockaddr_in cli_addr;
 int firmware;
 
 void setFirmware();
-void writeSock(int sockfd, char * str);
-char * readSock(int sockfd);
+void writeSockTCP(int sockfd, char * str);
+char * readSockTCP(int sockfd);
 void recFile(int newsockfd);
 void sendFile(int sockfd, char * filename);
 void handleConnection(int sockfd);
-void createSockTCP();
+int createSockTCP();
 
 #endif /* CLIENTE_H */

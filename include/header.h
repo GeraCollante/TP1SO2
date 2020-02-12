@@ -9,9 +9,10 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#define PORT 9985
+#define PORT 5000
 #define TAM 256
 #define BUFFER 1500
+#define MAXLINE 1500
 
 #endif /* MODULE_H */
 

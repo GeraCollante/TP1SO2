@@ -2,7 +2,6 @@
 #include "header.h"
 #define h_addr h_addr_list[0] /* for backward compatibility */
 
-
 void setFirmware(){
 	int firmAux;
     FILE *fptr;
@@ -23,7 +22,7 @@ void setFirmware(){
  * @param sockfd 
  * @param str 
  */
-void writeSock(int sockfd, char * str)
+void writeSockTCP(int sockfd, char * str)
 {
 	int n;
 	char buffer [TAM];
@@ -43,7 +42,7 @@ void writeSock(int sockfd, char * str)
  * @param sockfd 
  * @return char* 
  */
-char * readSock(int sockfd)
+char * readSockTCP(int sockfd)
 {
 	int n;
 	char buffer [TAM];
@@ -75,7 +74,7 @@ void recFile(int newsockfd){
 	intps = time(NULL);
 	tmi = localtime(&intps);
 	bzero(filename,256);
-	sprintf(filename, "%s", "cliente");
+	sprintf(filename, "%s", "clientewesa");
 	// sprintf(filename,"clt.%d.%d.%d.%d.%d.%d",tmi->tm_mday,tmi->tm_mon+1,1900+tmi->tm_year,tmi->tm_hour,tmi->tm_min,tmi->tm_sec);
 	printf("Creating the copied output file : %s\n",filename);
 	
@@ -169,7 +168,7 @@ void handleConnection(int sockfd){
 	// int conexion;
 	// int fd;
 
-	while(1) {
+	while(1){
 		// printf( "Ingrese el mensaje a transmitir: " );
 		// memset( buffer, '\0', TAM );
 		// fgets( buffer, TAM-1, stdin );
@@ -180,29 +179,24 @@ void handleConnection(int sockfd){
 		// if( !strcmp( "fin", buffer ) ) {
 		// 	terminar = 1;
 		// }
-		strcpy(buffer, readSock(sockfd));
+		strcpy(buffer, readSockTCP(sockfd));
 		printf("Server %s\n", buffer);
 
 		switch (atoi(buffer))
 		{
-		case 2:
-			printf("Sending Scan to Earth Station");
-			char filename [100] = "20190861730_GOES16-ABI-FD-GEOCOLOR-10848x10848.jpg";
-			sendFile(sockfd, filename);
-			exit(0);
-			break;
-		case 1:
-			printf("Llego un 2");
-			recFile(sockfd);
-			exit(0);
-		case 3:
-			printf("Llego un 3");
-			char cadenita [TAM] = "Id del satélite \n Uptime del satélite \n Versión del software \n Consumo de memoria y CPU";
-			writeSock(sockfd, cadenita);
-			exit(0);
-		default:
-			printf("Llego cualquier otra cosa");
-			break;
+			case 1:
+				printf("Llego un 2");
+				recFile(sockfd);
+				exit(0);
+			case 2:
+				printf("Sending Scan to Earth Station");
+				char filename [100] = "../20190861730_GOES16-ABI-FD-GEOCOLOR-10848x10848.jpg";
+				sendFile(sockfd, filename);
+				exit(0);
+				break;
+			default:
+				printf("Llego cualquier otra cosa");
+				break;
 		}
 
 		//preparation of the shipment
@@ -228,12 +222,13 @@ void handleConnection(int sockfd){
  * @brief A TCP socket is created
  * 
  */
-void createSockTCP(){
+int createSockTCP(){
 	int sockfd, puerto;
 	// , n;
 	struct hostent *server;
 	// int terminar = 0;
-	// char red [100] = "192.168.0.106";
+	// char * rpnet = "169.254.116.175";
+	char * net = "192.168.0.31";
 
 	puerto = PORT;
 	sockfd = socket( AF_INET, SOCK_STREAM, 0 );
@@ -243,7 +238,7 @@ void createSockTCP(){
 	}
 
 	//server = gethostbyname("192.168.0.106");
-	server = gethostbyname("169.254.116.175");
+	server = gethostbyname(net);
 	if (server == NULL) {
 		fprintf( stderr,"Error, no existe el host\n" );
 		exit( 0 );
@@ -252,10 +247,13 @@ void createSockTCP(){
 	serv_addr.sin_family = AF_INET;
 	bcopy( (char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length );
 	serv_addr.sin_port = htons( puerto );
-	if ( connect( sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr ) ) < 0 ) {
-		perror( "conexion" );
-		exit( 1 );
-	}
 
-	handleConnection(sockfd);
+	// if ( connect( sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr ) ) < 0 ) {
+	// 	perror( "conexion" );
+	// 	exit( 1 );
+	// }
+
+	return sockfd;
+
+	// handleConnection(sockfd);
 }

@@ -8,12 +8,12 @@ CLIENT 		:= client
 SERVER 		:= server
 
 ##
-SRCSCLIENT 	:= client.c sock_cli_tcp.c
+SRCSCLIENT 	:= client.c sock_cli_tcp.c sock_cli_udp.c 
 
 ##
 OBJSCLIENT 	:= $(SRCSCLIENT:.c=.o)
 
-SRCSSERVER 	:= server.c sock_srv_tcp.c
+SRCSSERVER 	:= server.c sock_srv_tcp.c sock_srv_udp.c 
 OBJSSERVER 	:= $(SRCSSERVER:.c=.o)
 
 ##
@@ -73,17 +73,16 @@ clean:
 run: all
 	./$(BIN)/$(EXECUTABLE)
 
-# $(BIN)/$(CLIENT): $(SOURCESCLIENT)
-# 	@echo "Llegue cliente"
-# 	$(CC) $(CFLAGS) $^ -o $@
-
 $(BIN)/$(CLIENT): $(SOURCESCLIENT)
-	@echo "Cross-compile" 
-	$(RP) $(CFLAGS) -c -o $(OBJCLIENT1) $(SRCCLIENT1)
-	$(RP) $(CFLAGS) -c -o $(OBJCLIENT2) $(SRCCLIENT2)
-	$(RP) $(CFLAGS) $(OBJCLIENT1) $(OBJCLIENT2) -o $@
+	@echo "Llegue cliente"
+	$(CC) $(CFLAGS) $^ -o $@
+
+# $(BIN)/$(CLIENT): $(SOURCESCLIENT)
+# 	@echo "Cross-compile" 
+# 	$(RP) $(CFLAGS) -c -o $(OBJCLIENT1) $(SRCCLIENT1)
+# 	$(RP) $(CFLAGS) -c -o $(OBJCLIENT2) $(SRCCLIENT2)
+# 	$(RP) $(CFLAGS) $(OBJCLIENT1) $(OBJCLIENT2) -o $@
 
 $(BIN)/$(SERVER) : $(SOURCESSERVER)
 	@echo "Llegue server"
 	$(CC) $(CFLAGS) $^ -o $@
-

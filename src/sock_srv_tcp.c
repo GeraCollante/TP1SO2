@@ -136,7 +136,7 @@ void updateFirmware()
  * @param sockfd 
  * @param cadena 
  */
-void writeSock(int sockfd, char * cadena)
+void writeSockTCP(int sockfd, char * cadena)
 {
 	int n;
 	char buffer [TAM];
@@ -285,7 +285,7 @@ const char * getIP(){
     return ptrBuff;
 }
 
-char * readSock(int sockfd)
+char * readSockTCP(int sockfd)
 {
 	int n;
 	char buffer [TAM];
@@ -305,107 +305,108 @@ char * readSock(int sockfd)
     return ptrBuff;
 }
 
-void handleConnection(int newsockfd)
+void handleConnection(int newsockfd, int option)
 {
 	// int n;
 	char buffer [TAM];
-	char filename [100] = "bin/client";
+	char filename [100] = "messi";
 
-	while (1) {
-				printf( "Enter the message to be transmitted:" );
-				memset( buffer, '\0', TAM );
-				fgets( buffer, TAM-1, stdin );
+	while(1){
+			// printf("Enter the message to be transmitted:");
+			memset(buffer, '\0', TAM);
+			// fgets(buffer, TAM-1, stdin);
+			sprintf(buffer, "%i", option);
 
-				writeSock(newsockfd, buffer);
+			printf("%i", option);
 
-				printf("strcmp: %i", strcmp(buffer,"3"));
-				printf("sss %s sss", buffer);
-				printf("num es: %i", atoi(buffer));
+			writeSockTCP(newsockfd, buffer);
 
-				switch (atoi(buffer))
-				{
-				case 1:
-					sendFile(newsockfd, filename);
-					break;
-				case 2:
-					recFile(newsockfd);
-					break;
-				//Imprimir parametros
-				case 3:
-					memset(buffer, '\0', TAM );
-					strcpy(buffer, readSock(newsockfd));
-					printf("Buffer is: %s", buffer);
-					break;
-				default:
-					break;
-				}
+			// printf("strcmp: %i", strcmp(buffer,"3"));
+			// printf("sss %s sss", buffer);
+			// printf("num es: %i", atoi(buffer));
 
-				// n = read( newsockfd, buffer, TAM-1 );
-				// if ( n < 0 ) {
-				// 	perror( "lectura de socket" );
-				// 	exit(1);
-				// }
-
-				// n = write( newsockfd, "1", 18 );
-				// if ( n < 0 ) {
-				// 	perror( "escritura en socket" );
-				// 	exit( 1 );
-				// }
-
-				// strcpy(buffer, readSock(newsockfd));
-
-				// writeSock(newsockfd, "Mbappe");
-
-				// if (strcmp(buffer,"Messi")==0)
-				// {
-				// 	printf("Dormimos");
-				// 	sleep(5);
-				// 	exit(1);
-				// }
-				
-				// printf("Cliente %s\n", buffer);
-
-				// switch (atoi(buffer))
-				// {
-				// case 1:
-				// 	printf("Llego un 1");
-				// 	exit(0);
-				// 	break;
-				// case 2:
-				// 	printf("Llego un 2");
-				// 	exit(0);
-				// case 3:
-				// 	printf("Llego un 3");
-				// 	exit(0);
-				// default:
-				// 	printf("Llego cualquier otra cosa");
-				// 	break;
-				// }				
-
-				// n = read( newsockfd, buffer, TAM-1 );
-				// if ( n < 0 ) {
-				// 	perror( "lectura de socket" );
-				// 	exit(1);
-				// }
-
-				printf( "PROCESS %d. ", getpid() );
-				// printf( "Recibí: %s", buffer );
-						
-				// n = write( newsockfd, "Obtuve su mensaje", 18 );
-				// if ( n < 0 ) {
-				// 	perror( "escritura en socket" );
-				// 	exit( 1 );
-				// }
-				// Verificación de si hay que terminar
-				buffer[strlen(buffer)-1] = '\0';
-				if( !strcmp( "fin", buffer ) ) {
-					printf( "PROCESO %d. Como recibí 'fin', termino la ejecución.\n\n", getpid() );
-					exit(0);
-				}
+			switch(option)
+			{
+			case 1:
+				printf("Sending dog photo");
+				char filename [100] = "client";
+				sendFile(newsockfd, filename);
+				exit(0);
+				close(newsockfd);
+				break;
+			case 2:
+				recFile(newsockfd);
+				break;
+			default:
+				break;
 			}
+
+			// n = read( newsockfd, buffer, TAM-1 );
+			// if ( n < 0 ) {
+			// 	perror( "lectura de socket" );
+			// 	exit(1);
+			// }
+
+			// n = write( newsockfd, "1", 18 );
+			// if ( n < 0 ) {
+			// 	perror( "escritura en socket" );
+			// 	exit( 1 );
+			// }
+
+			// strcpy(buffer, readSock(newsockfd));
+
+			// writeSock(newsockfd, "Mbappe");
+
+			// if (strcmp(buffer,"Messi")==0)
+			// {
+			// 	printf("Dormimos");
+			// 	sleep(5);
+			// 	exit(1);
+			// }
+			
+			// printf("Cliente %s\n", buffer);
+
+			// switch (atoi(buffer))
+			// {
+			// case 1:
+			// 	printf("Llego un 1");
+			// 	exit(0);
+			// 	break;
+			// case 2:
+			// 	printf("Llego un 2");
+			// 	exit(0);
+			// case 3:
+			// 	printf("Llego un 3");
+			// 	exit(0);
+			// default:
+			// 	printf("Llego cualquier otra cosa");
+			// 	break;
+			// }				
+
+			// n = read( newsockfd, buffer, TAM-1 );
+			// if ( n < 0 ) {
+			// 	perror( "lectura de socket" );
+			// 	exit(1);
+			// }
+
+			printf( "PROCESS %d. ", getpid() );
+			// printf( "Recibí: %s", buffer );
+					
+			// n = write( newsockfd, "Obtuve su mensaje", 18 );
+			// if ( n < 0 ) {
+			// 	perror( "escritura en socket" );
+			// 	exit( 1 );
+			// }
+			// Verificación de si hay que terminar
+			buffer[strlen(buffer)-1] = '\0';
+			if(!strcmp("fin", buffer)){
+				printf( "PROCESO %d. Como recibí 'fin', termino la ejecución.\n\n", getpid() );
+				exit(0);
+			}
+		}
 }
 
-void createSocketTCP()
+void createSocketTCP(int option)
 {
 	int sockfd, newsockfd, puerto, clilen, pid;
 	struct sockaddr_in cli_addr;
@@ -448,7 +449,8 @@ void createSocketTCP()
 
 		if ( pid == 0 ) {  // Proceso hijo
 			close( sockfd );
-			handleConnection(newsockfd);
+			
+			// handleConnection(newsockfd, option);
 		}
 		else {
 			printf( "SERVER: New client, who attends child process: %d\n", pid );

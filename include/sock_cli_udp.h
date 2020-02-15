@@ -9,14 +9,23 @@
 #ifndef CLIUDP_H
 #define CLIUDP_H
 
-#define PORT    9000 
+#include "header.h"
+
+// #define PORT    9000
 #define MAXLINE 1024
 #define TAM     1024
 
-void    handleUDP();
-int     createSockUDP();
-char *  readSockUDP(int sockfd);
-void    sendInfo(int sockfd);
+char *  cargarInfoSatelite();
+int     crearSocketUDP();
+char *  CPU();
+char *  id();
+char *  idleTime();
+char *  sysTime();
+char *  secondsToDHMS(int sec);
+char *  mem();
+char *  UpTime();
+char *  userTime();
+char *  version();
 
 #endif /* CLIUDP_H */
 

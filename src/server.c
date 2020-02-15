@@ -1,80 +1,81 @@
-#include "server_tcp.h"
-#include "header.h"
-#include "hash-string.h"
+// TCP Client program 
+#include <arpa/inet.h> 
+#include <errno.h> 
+#include <netinet/in.h> 
+#include <signal.h> 
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <string.h> 
+#include <sys/socket.h> 
+#include <sys/types.h> 
+#include <unistd.h>
+#include <sys/time.h>
+#include <netdb.h> 
+#include <time.h>
+#include <fcntl.h>
+#include "sock_srv_tcp.h"
 #include "sock_srv_udp.h"
 
-// KEYS
-#define HASH    3378490201
-#define UFB     75684438
-#define SS      2127732462
-#define OT      2104739370
-#define HELP    1950366504
-#define EXIT    2090237503
-
-// COLORS
-#define GREEN       "\x1b[32m"
-#define RESETCLR    "\x1b[0m"
-#define BOLD        "\033[1m"
-#define RESETBOLD   "\033[0m"
-
-
-int createSockTCP2(){
-    int sockfd;
-	struct sockaddr_in servaddr;
-  
-    int n, len; 
-    // Creating socket file descriptor 
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
-        printf("socket creation failed"); 
-        exit(0); 
-    } 
-  
-    memset(&servaddr, 0, sizeof(servaddr)); 
-  
-    // Filling server information 
-    servaddr.sin_family = AF_INET; 
-    servaddr.sin_port = htons(PORT); 
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
-
-    if(connect(sockfd, (struct sockaddr*)&servaddr,  
-                             sizeof(servaddr)) < 0) { 
-        printf("\n Error : Connect Failed \n"); 
-    }
-
-    return sockfd;
-}
+#define UFB 	75684438
+#define SS 		2127732462
+#define OT 		2104739370
+#define HELP 	1950366504
+#define EXIT 	258360873
 
 int main() 
 { 
-    int sockfd; 
-    char buffer[MAXLINE]; 
-    char* message = "Hello Server"; 
-    struct sockaddr_in servaddr; 
+    int sockfd;
+    char buffer[MAXLINE];
+    char* message = "Hello Server";
   
-    int n, len; 
-    // Creating socket file descriptor 
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
-        printf("socket creation failed"); 
-        exit(0); 
-    }
-  
-    memset(&servaddr, 0, sizeof(servaddr)); 
-  
-    // Filling server information 
-    servaddr.sin_family = AF_INET; 
-    servaddr.sin_port = htons(PORT); 
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
-  
-    if (connect(sockfd, (struct sockaddr*)&servaddr,  
-                             sizeof(servaddr)) < 0) { 
-        printf("\n Error : Connect Failed \n"); 
-    } 
-  
-    memset(buffer, 0, sizeof(buffer)); 
-    strcpy(buffer, "Hello Server"); 
-    write(sockfd, buffer, sizeof(buffer)); 
-    printf("Message from server: "); 
-    read(sockfd, buffer, sizeof(buffer)); 
-    puts(buffer); 
-    close(sockfd); 
+    int n, len;
+	int salir = 0;
+
+	// if(logSuccess()==1)
+	if(1)
+	{
+		do
+		{
+			printf("Ingrese comando:\n");
+			memset(buffer, '\0', MAXLINE);
+			fgets(buffer, MAXLINE-1, stdin);
+
+			switch(string_hash(buffer))
+			{
+			case SS:
+				printf("SS\n");
+				sockfd = crearSocketTCP();
+				actualizarFirmware(sockfd);
+				close(sockfd);
+				break;
+			case UFB:
+				printf("UFB\n");
+				sockfd = crearSocketTCP();
+				startScanning(sockfd);
+				close(sockfd);
+				break;
+			case OT:
+				sockfd = crearSocketUDP();
+				sendto(sockfd, (const char*)message, strlen(message), 
+				0, (const struct sockaddr*)&servaddr, 
+				sizeof(servaddr));
+				// receive server's response 
+				printf("Información recibida: \n");
+				memset(buffer, '\0', MAXLINE);
+				n = recvfrom(sockfd, (char*)buffer, MAXLINE, 
+				0, (struct sockaddr*)&servaddr, 
+				&len); 
+				printf("%s", buffer);
+				close(sockfd);
+				break;
+			case EXIT:
+				salir=1;
+			default:
+				break;
+			}
+		}while(salir==0);
+	}
+	else exit(0);
+
+	return 0;
 } 

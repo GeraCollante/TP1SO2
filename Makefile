@@ -8,7 +8,7 @@ CLIENT 		:= client
 SERVER 		:= server
 
 ##
-SRCSCLIENT 	:= client.c sock_cli_tcp.c sock_cli_udp.c 
+SRCSCLIENT 	:= client.c sock_cli_tcp.c sock_cli_udp.c funciones.c
 
 ##
 OBJSCLIENT 	:= $(SRCSCLIENT:.c=.o)

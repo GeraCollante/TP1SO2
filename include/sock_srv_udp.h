@@ -17,14 +17,16 @@
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
+#include "header.h"
 
-#define PORT    9000 
-#define MAXLINE 1024 
-#define TAM 1024 
+int crearSocketUDP();
+// #define PORT    9000 
+// #define MAXLINE 1024 
+// #define TAM 1024 
 
-void    handleUDP();
-int     createSockUDP();
-void    recInfo(int sockfd);
+// void    handleUDP();
+// int     createSockUDP();
+// void    recInfo(int sockfd);
 
 #endif /* SRVUDP_H */
 

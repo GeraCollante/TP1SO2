@@ -7,6 +7,14 @@
         "socket.h": "c",
         "server_tcp.h": "c",
         "hash-string.h": "c",
-        "sock_srv_udp.h": "c"
+        "sock_srv_udp.h": "c",
+        "time.h": "c",
+        "satellite.h": "c",
+        "typeinfo": "c",
+        "fcntl.h": "c",
+        "sock_cli_udp.h": "c",
+        "sock_cli_tcp.h": "c",
+        "funciones.h": "c",
+        "sock_srv_tcp.h": "c"
     }
 }

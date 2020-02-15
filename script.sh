@@ -1,3 +1,4 @@
 make clean
 make
-./bin/client
+#./bin/client
+#./bin/server

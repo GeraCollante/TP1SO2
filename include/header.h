@@ -30,9 +30,9 @@
 #include <unistd.h>
 #include "funciones.h"
 
-#define PORT    6682
-#define MAXLINE 1024 
-#define BUFFER  1024 
+#define PORT    6685
+#define MAXLINE 1024
+#define BUFFER  1024
 
 struct sockaddr_in cliaddr, servaddr;
 

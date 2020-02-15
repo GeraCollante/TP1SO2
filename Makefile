@@ -1,6 +1,6 @@
 CC 			:= gcc
 RP 			:= arm-linux-gnueabihf-gcc
-CFLAGS 		:= -Iinclude
+CFLAGS 		:= -Iinclude -Wall -pedantic -Werror
 BIN			:= bin
 SRC			:= src
 INCLUDE		:= include

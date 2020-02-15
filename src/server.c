@@ -28,7 +28,7 @@ int main()
     char buffer[MAXLINE];
     char* message = "Hello Server";
   
-    int n, len;
+	socklen_t server_addr_len;
 	int salir = 0;
 
 	// if(logSuccess()==1)
@@ -62,9 +62,9 @@ int main()
 				// receive server's response 
 				printf("Información recibida: \n");
 				memset(buffer, '\0', MAXLINE);
-				n = recvfrom(sockfd, (char*)buffer, MAXLINE, 
+				recvfrom(sockfd, (char*)buffer, MAXLINE, 
 				0, (struct sockaddr*)&servaddr, 
-				&len); 
+				&server_addr_len); 
 				printf("%s", buffer);
 				close(sockfd);
 				break;

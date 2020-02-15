@@ -201,10 +201,8 @@ void 	startScanning(int sockfd){
 }
 
 int 	crearSocketTCP(){
-
     int sockfd;
-  
-    int n, len; 
+
     // Creating socket file descriptor 
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
         printf("socket creation failed"); 
@@ -227,7 +225,6 @@ int 	crearSocketTCP(){
 }
 
 void 	manejarConexionTCP(int sockfd, int n){
-	char buffer[MAXLINE];
     switch(n)
     {
     case 1:

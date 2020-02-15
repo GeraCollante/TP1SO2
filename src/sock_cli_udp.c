@@ -61,13 +61,12 @@ int 	crearSocketUDP(){
 char * 	id(){
 	FILE *fp = fopen("/proc/sys/kernel/hostname", "r");
 	char buffer [TAM];
-    int n;
 	memset( buffer, '\0', TAM );
 	char * ptrBuff;
 	int strsize = strlen(buffer) + 1;
 	// We create dynamic pointer, if not, it gives core errors
 	ptrBuff = (char*)malloc(strsize * sizeof(char));
-	n = sprintf(ptrBuff, "%s", file2Str2(fp));
+	sprintf(ptrBuff, "%s", file2Str2(fp));
 	// printf("%s", ptrBuff);
     return ptrBuff;
 	fclose(fp);
@@ -77,7 +76,6 @@ char * 	version(){
 	FILE *fp = fopen("/proc/version", "r");
 	char buffer [TAM];
 	char *version;
-    int n;
 	memset( buffer, '\0', TAM );
 	char * ptrBuff;
 	int strsize = strlen(buffer) + 1;
@@ -95,7 +93,7 @@ char * 	UpTime(){
 	char buffer [TAM];
 	char * ptrBuff;
     char * str;
-    int n, totalSec;
+    int totalSec;
 	int t = time(NULL);
 	memset( buffer, '\0', TAM );
 	int strsize = strlen(buffer) + 1;
@@ -108,7 +106,7 @@ char * 	UpTime(){
 	struct tm * timeinfo;
 	timeinfo = localtime (&raw_time);
 	strftime (buffer, 80, "%x %X",timeinfo);
-    n = sprintf(ptrBuff, "%s", buffer);
+    sprintf(ptrBuff, "%s", buffer);
     return ptrBuff;
 	fclose(fp);
 }

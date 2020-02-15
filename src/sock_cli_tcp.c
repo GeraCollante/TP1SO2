@@ -98,7 +98,6 @@ void 	updateFirmware(){
 
 void 	manejarConexionTCP(int sockfd, char n){
     // printf("N vale: %c\n", n);
-    char buffer[MAXLINE];
     switch(n)
     {
     case '1':
@@ -123,13 +122,7 @@ void 	manejarConexionTCP(int sockfd, char n){
 }
 
 int 	crearListenTCP(){
-	int listenfd; 
-    pid_t childpid; 
-    fd_set rset; 
-    ssize_t n; 
-    socklen_t len; 
-    const int on = 1; 
-    char* message = "Hello Client"; 
+	int listenfd;
     void sig_chld(int); 
   
     /* create listening TCP socket */

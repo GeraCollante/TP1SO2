@@ -4,15 +4,12 @@
 #include "sock_cli_tcp.h"
 
 void waitTCPUDP(int listenfd, int udpfd){
-    int connfd, nready, maxfdp1; 
+    int connfd, maxfdp1; 
     char buffer[MAXLINE]; 
     char michaelBuffer[MAXLINE];
     pid_t childpid; 
-    fd_set rset; 
-    ssize_t n; 
-    socklen_t len; 
-    const int on = 1;
-    char* message = "Hello Client"; 
+    fd_set rset;
+    socklen_t len;
     void sig_chld(int);
 
     // clear the descriptor set 
@@ -27,7 +24,7 @@ void waitTCPUDP(int listenfd, int udpfd){
         FD_SET(udpfd, &rset); 
   
         // select the ready descriptor 
-        nready = select(maxfdp1, &rset, NULL, NULL, NULL); 
+        select(maxfdp1, &rset, NULL, NULL, NULL); 
   
         // if tcp socket is readable then handle 
         // it by accepting the connection 
@@ -57,7 +54,7 @@ void waitTCPUDP(int listenfd, int udpfd){
             printf("%s", michaelBuffer);
             len = sizeof(cliaddr); 
             bzero(buffer, sizeof(buffer));
-            n = recvfrom(udpfd, buffer, sizeof(buffer), 0, 
+            recvfrom(udpfd, buffer, sizeof(buffer), 0, 
                          (struct sockaddr*)&cliaddr, &len);
             // puts(buffer);
             sendto(udpfd, (const char*)michaelBuffer, sizeof(buffer), 0, 

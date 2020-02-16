@@ -126,11 +126,11 @@ int 	crearListenTCP(){
     void sig_chld(int); 
   
     /* create listening TCP socket */
-    listenfd = socket(AF_INET, SOCK_STREAM, 0); 
-    bzero(&servaddr, sizeof(servaddr)); 
-    servaddr.sin_family = AF_INET; 
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY); 
-    servaddr.sin_port = htons(PORT); 
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    bzero(&servaddr, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(PORT);
 
     bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
 

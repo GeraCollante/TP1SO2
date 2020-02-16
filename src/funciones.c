@@ -19,7 +19,8 @@ int max(int x, int y)
  * 
  */
 void clrReg(char (*pointer)[MATRIX_SIZE]){
-	for(int k = 0; k<SIZE;k++){
+	int k;
+	for(k = 0; k<SIZE;k++){
 	strcpy(pointer[k],"");
 	}
 }
@@ -75,7 +76,8 @@ void loadReg2(char (*pointer)[MATRIX_SIZE], char * ptr)
  * 
  */
 void listar(char (*pointer)[MATRIX_SIZE]){
-	for(int j=0; j<SIZE;j++){
+	int j;
+	for(j=0; j<SIZE;j++){
 		printf("%d",j);
 		puts(pointer[j]);
 	}
@@ -89,7 +91,8 @@ void listar(char (*pointer)[MATRIX_SIZE]){
  */
 char * find(char (*pointer)[MATRIX_SIZE], char * buscar)
 {
-	for(int i = 0; i < SIZE; ++i)
+	int i;
+	for(i = 0; i < SIZE; ++i)
 		{
 			if (strstr(pointer[i], buscar) != NULL)
 			{
@@ -108,7 +111,8 @@ char * find(char (*pointer)[MATRIX_SIZE], char * buscar)
  */
 int returnPos(char (*pointer)[MATRIX_SIZE], char * buscar)
 {
-	for(int i = 0; i < SIZE; ++i)
+	int i;
+	for(i = 0; i < SIZE; ++i)
 		{
 			if (strstr(pointer[i], buscar) != NULL)
 			{
@@ -126,8 +130,8 @@ int returnPos(char (*pointer)[MATRIX_SIZE], char * buscar)
  */
 int countNoNull(char (*pointer)[MATRIX_SIZE])
 {
-	int counter=0;
-	for(int i = 0; i < SIZE; ++i)
+	int i, counter=0;
+	for(i = 0; i < SIZE; ++i)
 		{
 			if (strcmp(pointer[i],"")!=0)
 			{

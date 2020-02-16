@@ -214,7 +214,8 @@ int 	crearSocketTCP(){
     // Filling server information 
     servaddr.sin_family = AF_INET; 
     servaddr.sin_port = htons(PORT); 
-    servaddr.sin_addr.s_addr = inet_addr("192.168.0.31"); 
+    servaddr.sin_addr.s_addr = inet_addr("169.254.237.70"); 
+    // servaddr.sin_addr.s_addr = inet_addr("192.168.0.31");
   
     if (connect(sockfd, (struct sockaddr*)&servaddr,  
                              sizeof(servaddr)) < 0) { 

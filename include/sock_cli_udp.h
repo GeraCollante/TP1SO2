@@ -11,21 +11,18 @@
 
 #include "header.h"
 
-// #define PORT    9000
-#define MAXLINE 1024
-#define TAM     1024
+#define MAXLINE     1024
+#define TAM         1024
+#define BUFFSIZE    256
 
-char *  cargarInfoSatelite();
 int     crearSocketUDP();
-char *  CPU();
-char *  id();
-char *  idleTime();
-char *  sysTime();
-char *  secondsToDHMS(int sec);
-char *  mem();
-char *  UpTime();
-char *  userTime();
-char *  version();
+void    showCpuinfo(int);
+void    showVersion(int);
+int     showUptime(int);
+void    showStats(int);
+void    showMeminfo(int);
+void    uptimeSystemDate();
+void    findStr(char *, char *, char *);
 
 #endif /* CLIUDP_H */
 

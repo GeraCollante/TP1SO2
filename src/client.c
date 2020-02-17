@@ -14,6 +14,12 @@
 
 #define BUFFSIZE 256
 
+/**
+ * @brief Handler simultaneo de conexiones TPC y UDP
+ * 
+ * @param listenfd 
+ * @param udpfd 
+ */
 void waitTCPUDP(int listenfd, int udpfd){
     int connfd, maxfdp1; 
     char buffer[MAXLINE];
@@ -40,16 +46,9 @@ void waitTCPUDP(int listenfd, int udpfd){
             connfd = accept(listenfd, (struct sockaddr*)&cliaddr, &len); 
             if ((childpid = fork()) == 0) { 
                 close(listenfd); 
-                bzero(buffer, sizeof(buffer)); 
-                // printf("Message From TCP client: ");
+                bzero(buffer, sizeof(buffer));
                 read(connfd, buffer, sizeof(buffer));
 				manejarConexionTCP(connfd, buffer[0]);
-                // bzero(buffer, sizeof(buffer)); 
-                // printf("Message From TCP client: "); 
-                // read(connfd, buffer, sizeof(buffer)); 
-                // puts(buffer); 
-                // write(connfd, (const char*)message, sizeof(buffer)); 
-				// recibirArchivo(connfd);
                 close(connfd); 
                 exit(0); 
             } 
@@ -61,23 +60,23 @@ void waitTCPUDP(int listenfd, int udpfd){
             bzero(buffer, sizeof(buffer));
             recvfrom(udpfd, buffer, sizeof(buffer), 0, 
                          (struct sockaddr*)&cliaddr, &len);
-            // puts(buffer);
 
+            // Enviar información
             showCpuinfo(udpfd);
             showVersion(udpfd);
             showUptime(udpfd);
             showStats(udpfd);
             showMeminfo(udpfd);
-            // bzero(buffer, sizeof(buffer));
-            // sendto(udpfd, (const char*)buffer, sizeof(buffer), 0, 
-            //        (struct sockaddr*)&cliaddr, sizeof(cliaddr)); 
-            // printf("Información enviada.\n");
         } 
     } 
 }
 
+/**
+ * @brief Creación de cliente
+ * 
+ */
 void cliente(){
-    printf("%s\n", "Cliente satelite nuevo");
+    printf("%s\n", "Cliente satelite");
     showFirmware();
     int listenfd, udpfd;
     void sig_chld(int); 

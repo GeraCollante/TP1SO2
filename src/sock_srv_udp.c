@@ -1,6 +1,11 @@
 // Server side implementation of UDP client-server model 
 #include "sock_srv_udp.h"
 
+/**
+ * @brief Leer mensaje UDP
+ * 
+ * @param sockfd 
+ */
 void readUDP(int sockfd){
 	char buffer[MAXLINE];
 	socklen_t server_addr_len;
@@ -12,6 +17,13 @@ void readUDP(int sockfd){
 	printf("%s", buffer);
 }
 
+/**
+ * @brief Creación socket UDP
+ * 
+ * @param port 
+ * @param ipaddr 
+ * @return sockfd
+ */
 int crearSocketUDP(int port, char* ipaddr){
     int l;
 	int sfd;

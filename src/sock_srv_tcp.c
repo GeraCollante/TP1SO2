@@ -11,6 +11,11 @@
 #define BOLD        "\033[1m"
 #define RESETBOLD   "\033[0m"
 
+/**
+ * @brief Verificación de ingreso correcto.
+ * 
+ * @return int Condición de ingreso.
+ */
 int 	logSuccess(){
     int attemps = 0;
     do
@@ -35,8 +40,19 @@ int 	logSuccess(){
     return 0;
 }
 
+/**
+ * @brief Para retrocompatibilidad
+ * 
+ * @param stream 
+ * @return int 
+ */
 int 	fileno(FILE *stream);
 
+/**
+ * @brief Menu de login
+ * 
+ * @return int Ingreso correcto.
+ */
 int 	login(){
     struct termios oflags, nflags;
     char    username[256];
@@ -77,6 +93,12 @@ int 	login(){
     return login;
 }
 
+/**
+ * @brief Creación de hash
+ * 
+ * @param string cadena para el hash
+ * @return hash
+ */
 unsigned int string_hash(void *string){
 	/* This is the djb2 string hash function */
 
@@ -93,6 +115,12 @@ unsigned int string_hash(void *string){
 	return result;
 }
 
+/**
+ * @brief Enviar archivo via TCP
+ * 
+ * @param sockfd 
+ * @param filename 
+ */
 void 	enviarArchivo(int sockfd, char * filename){	
 	char buffer[BUFFER];
 	int l=sizeof(struct sockaddr_in);
@@ -131,6 +159,12 @@ void 	enviarArchivo(int sockfd, char * filename){
 	// printf("Time send file: %f sec\n", time_spent);
 }
 
+/**
+ * @brief Recibir archivo via TCP
+ * 
+ * @param newsockfd 
+ * @param nombreArchivo 
+ */
 void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 	//Processing the file name with the date
 	char buffer[BUFFER],filename[256];
@@ -179,18 +213,24 @@ void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 	close(fd);
 }
 
+/**
+ * @brief Inicia actualización de firmware
+ * 
+ * @param sockfd 
+ */
 void 	actualizarFirmware(int sockfd){
 	char buffer[MAXLINE];
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, "2");
     write(sockfd, buffer, sizeof(buffer));
-	// memset(buffer, 0, sizeof(buffer));
-    // strcpy(buffer, "10.5");
-    // write(sockfd, buffer, sizeof(buffer));
-	// Recibir archivo
 	manejarConexionTCP(sockfd, atoi(buffer));
 }
 
+/**
+ * @brief Solicita envio de imagen
+ * 
+ * @param sockfd 
+ */
 void 	startScanning(int sockfd){
 	char buffer[MAXLINE];
     memset(buffer, 0, sizeof(buffer));
@@ -200,6 +240,11 @@ void 	startScanning(int sockfd){
 	manejarConexionTCP(sockfd, atoi(buffer));
 }
 
+/**
+ * @brief Creacion de socket TCP
+ * 
+ * @return int 
+ */
 int 	crearSocketTCP(){
     int sockfd;
 
@@ -225,6 +270,12 @@ int 	crearSocketTCP(){
 	return sockfd;
 }
 
+/**
+ * @brief Handler conexion TCP
+ * 
+ * @param sockfd 
+ * @param n 
+ */
 void 	manejarConexionTCP(int sockfd, int n){
     switch(n)
     {
@@ -244,52 +295,4 @@ void 	manejarConexionTCP(int sockfd, int n){
     default:
         break;
     }
-}
-
-const char * getIP(){
-    struct ifaddrs *ifaddr, *ifa;
-    int family, s, n;
-    char host[NI_MAXHOST];
-    char * net = "enp3s0";
-	char * ptrBuff;
-	int keylen = strlen(host) + 1;
-	ptrBuff = (char*)malloc(keylen * sizeof(char));
-	memset( host, '\0', MAXLINE );
-
-    if (getifaddrs(&ifaddr) == -1) {
-        perror("getifaddrs");
-        exit(EXIT_FAILURE);
-    }
-
-    /* Walk through linked list, maintaining head pointer so we
-        can free list later */
-
-    for (ifa = ifaddr, n = 0; ifa != NULL; ifa = ifa->ifa_next, n++) {
-        if (ifa->ifa_addr == NULL)
-            continue;
-
-        family = ifa->ifa_addr->sa_family;
-
-        /* Display interface name and family (including symbolic
-            form of the latter for the common families) */
-
-        char * netname= ifa->ifa_name;
-        if(strcmp(netname, net)==0){
-            
-            if (family == AF_INET) {
-                s = getnameinfo(ifa->ifa_addr,
-                        (family == AF_INET) ? sizeof(struct sockaddr_in) :
-                                                sizeof(struct sockaddr_in6),
-                        host, NI_MAXHOST,
-                        NULL, 0, NI_NUMERICHOST);
-                if (s != 0) {
-                    printf("getnameinfo() failed: %s\n", gai_strerror(s));
-                    exit(EXIT_FAILURE);
-                }
-                strcpy(ptrBuff, host);
-            }
-        }
-    }
-    freeifaddrs(ifaddr);
-    return ptrBuff;
 }

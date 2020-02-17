@@ -5,6 +5,11 @@
 
 int firmware;
 
+/**
+ * @brief Creación de socket UDP
+ * 
+ * @return sockfd 
+ */
 int 	crearSocketUDP(){
     /* create UDP socket */
     int udpfd = socket(AF_INET, SOCK_DGRAM, 0); 
@@ -207,7 +212,7 @@ void showMeminfo(int udpfd){
     //Filtra memoria libre y la imprime
     sscanf(meminfo2,"%*s %s ", str1);
     printf("FreeMem: %s Kb\n",str1);
-    sprintf(freeMem, "TotalMem: %s Kb\n",str1);
+    sprintf(freeMem, "FreeMem: %s Kb\n",str1);
     sendto(udpfd, (const char*)freeMem, sizeof(freeMem), 0, 
            (struct sockaddr*)&cliaddr, sizeof(cliaddr));
 }

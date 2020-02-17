@@ -2,17 +2,23 @@
 
 #define h_addr h_addr_list[0] /* for backward compatibility */
 
+/**
+ * @brief Función para recibir archivos vía TCP
+ * 
+ * @param newsockfd 
+ * @param nombreArchivo 
+ */
 void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 	//Processing the file name with the date
 	char buffer[BUFFER],filename[256];
-	time_t intps;
+	// time_t intps;
 	long int n, m,count=0;
-	struct tm* tmi;
+	// struct tm* tmi;
 	int fd;
 	//Processing the file name with the date
 	bzero(filename,256);
-	intps = time(NULL);
-	tmi = localtime(&intps);
+	// intps = time(NULL);
+	// tmi = localtime(&intps);
 	sprintf(filename, "%s", nombreArchivo);
 	// sprintf(filename,"clt.%d.%d.%d.%d.%d.%d",tmi->tm_mday,tmi->tm_mon+1,1900+tmi->tm_year,tmi->tm_hour,tmi->tm_min,tmi->tm_sec);
 	printf("Creating the copied output file : %s\n",filename);
@@ -49,20 +55,10 @@ void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 	close(fd);
 }
 
-void 	setFirmware(){
-	int firmAux;
-    FILE *fptr;
-    if ((fptr = fopen("firmware","rw")) == NULL){
-       printf("Error! opening file");
-       // Program exits if the file pointer returns NULL.
-       exit(1);
-    }
-	fscanf(fptr, "%i", &firmAux);
-	firmware = firmAux;
-	printf("version: %i\n", firmware);
-	fclose(fptr);
-}
-
+/**
+ * @brief Mostrar valor firmware
+ * 
+ */
 void 	showFirmware(){
     int firmAux;
     FILE *fptr;
@@ -75,6 +71,10 @@ void 	showFirmware(){
 	printf("firmware v1.%i\n", firmAux);
 }
 
+/**
+ * @brief Actualiza valor firmware
+ * 
+ */
 void 	updateFirmware(){
 	int firmAux;
     FILE *fptr;
@@ -84,9 +84,7 @@ void 	updateFirmware(){
        exit(1);
     }
 	fscanf(fptr, "%i", &firmAux);
-	// printf("Old firmware: %i\n", firmAux);
 	firmware = firmAux + 1;
-	// printf("New firmware: %i\n", firmware);
     fclose(fptr);
 	if ((fptr = fopen("firmware","w")) == NULL){
        printf("Error! opening file");
@@ -97,6 +95,12 @@ void 	updateFirmware(){
 	fclose(fptr);
 }
 
+/**
+ * @brief Handler para conexion TCP
+ * 
+ * @param sockfd 
+ * @param n 
+ */
 void 	manejarConexionTCP(int sockfd, char n){
     // printf("N vale: %c\n", n);
     switch(n)
@@ -123,6 +127,11 @@ void 	manejarConexionTCP(int sockfd, char n){
     }
 }
 
+/**
+ * @brief Creación de socket temporal TCP
+ * 
+ * @return sockfd 
+ */
 int 	crearListenTCP(){
 	int listenfd;
     void sig_chld(int); 
@@ -141,6 +150,12 @@ int 	crearListenTCP(){
 	return listenfd;
 }
 
+/**
+ * @brief Función para enviar archivo via TCP
+ * 
+ * @param sockfd 
+ * @param filename 
+ */
 void 	enviarArchivo(int sockfd, char * filename){	
 	char buffer[BUFFER];
 	int l=sizeof(struct sockaddr_in);

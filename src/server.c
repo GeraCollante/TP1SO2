@@ -1,18 +1,4 @@
 // TCP Client program 
-#include <arpa/inet.h> 
-#include <errno.h> 
-#include <netinet/in.h> 
-#include <signal.h> 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <string.h> 
-#include <sys/socket.h> 
-#include <sys/types.h> 
-#include <unistd.h>
-#include <sys/time.h>
-#include <netdb.h> 
-#include <time.h>
-#include <fcntl.h>
 #include "sock_srv_tcp.h"
 #include "sock_srv_udp.h"
 
@@ -22,16 +8,19 @@
 #define HELP 	1950366504
 #define EXIT 	258360873
 
+/**
+ * @brief Creación del server
+ * 
+ */
 void server(){
 	int sockfd;
     char buffer[MAXLINE];
     char* message = "Hello Server";
   
-	// socklen_t server_addr_len;
 	int salir = 0;
 
-	// if(logSuccess()==1)
-	if(1)
+	if(logSuccess()==1)
+	// if(1)
 	{
 		do
 		{
@@ -54,13 +43,10 @@ void server(){
 				close(sockfd);
 				break;
 			case OT:
-				// sockfd = crearSocketUDP();
-				// sockfd = crearSocketUDP(PORT, "192.168.0.31");
 				sockfd = crearSocketUDP(PORT, "169.254.237.70");
 				sendto(sockfd, (const char*)message, strlen(message), 
 				0, (const struct sockaddr*)&servaddr, 
 				sizeof(servaddr));
-				// receive server's response 
 				// Model
 				readUDP(sockfd);
 				// Kernel Version

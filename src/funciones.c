@@ -13,7 +13,6 @@ int max(int x, int y)
     return max;
 }
 
-
 /**
  * @brief Clean list
  * 

@@ -19,14 +19,8 @@
 #include <netinet/in.h> 
 #include "header.h"
 
-int crearSocketUDP();
-// #define PORT    9000 
-// #define MAXLINE 1024 
-// #define TAM 1024 
-
-// void    handleUDP();
-// int     createSockUDP();
-// void    recInfo(int sockfd);
+int     crearSocketUDP();
+void    readUDP(int);
 
 #endif /* SRVUDP_H */
 

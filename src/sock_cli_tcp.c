@@ -1,4 +1,5 @@
 #include "sock_cli_tcp.h"
+
 #define h_addr h_addr_list[0] /* for backward compatibility */
 
 void 	recibirArchivo(int newsockfd, char * nombreArchivo){
@@ -12,9 +13,8 @@ void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 	bzero(filename,256);
 	intps = time(NULL);
 	tmi = localtime(&intps);
-	bzero(filename,256);
-	// sprintf(filename, "%s", nombreArchivo);
-	sprintf(filename,"clt.%d.%d.%d.%d.%d.%d",tmi->tm_mday,tmi->tm_mon+1,1900+tmi->tm_year,tmi->tm_hour,tmi->tm_min,tmi->tm_sec);
+	sprintf(filename, "%s", nombreArchivo);
+	// sprintf(filename,"clt.%d.%d.%d.%d.%d.%d",tmi->tm_mday,tmi->tm_mon+1,1900+tmi->tm_year,tmi->tm_hour,tmi->tm_min,tmi->tm_sec);
 	printf("Creating the copied output file : %s\n",filename);
 	
 	if ((fd=open(filename,O_CREAT|O_WRONLY,0600))==-1)
@@ -27,7 +27,7 @@ void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 
 	clock_t begin = clock();
 	
-	n=recv(newsockfd,buffer, BUFFER,0);
+	n=recv(newsockfd, buffer, BUFFER,0);
 
 	while(n) {
 		if(n==-1){
@@ -42,6 +42,7 @@ void 	recibirArchivo(int newsockfd, char * nombreArchivo){
 		bzero(buffer,BUFFER);
 		n=recv(newsockfd,buffer,BUFFER,0);
 	}
+
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("Time rec file: %f sec\n", time_spent);
@@ -107,10 +108,11 @@ void 	manejarConexionTCP(int sockfd, char n){
         // read(sockfd, buffer, sizeof(buffer));
         // puts(buffer);
         // setFirmware(atoi(buffer));
+		
         updateFirmware();
-        recibirArchivo(sockfd, "moshisha");
+        recibirArchivo(sockfd, "newclient");
         showFirmware();
-        // system("reboot");
+		system("sudo reboot");
         break;
     case '2':
         puts("Enviando archivo img");

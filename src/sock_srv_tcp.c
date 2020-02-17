@@ -235,7 +235,7 @@ void 	manejarConexionTCP(int sockfd, int n){
     	// strcpy(buffer, "u");
     	// write(sockfd, buffer, sizeof(buffer));
 
-        enviarArchivo(sockfd, "client");
+        enviarArchivo(sockfd, "bin/client");
         break;
     case 2:
 		puts("Recibiendo archivo img");

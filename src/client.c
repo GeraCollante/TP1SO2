@@ -72,25 +72,23 @@ void waitTCPUDP(int listenfd, int udpfd){
             // sendto(udpfd, (const char*)buffer, sizeof(buffer), 0, 
             //        (struct sockaddr*)&cliaddr, sizeof(cliaddr)); 
             // printf("Información enviada.\n");
-
-            // bzero(michaelBuffer, sizeof(michaelBuffer)); 
         } 
     } 
 }
 
-int main() 
-{ 
+void cliente(){
+    printf("%s\n", "Cliente satelite nuevo");
+    showFirmware();
     int listenfd, udpfd;
     void sig_chld(int); 
   
 	listenfd = crearListenTCP();
     udpfd    = crearSocketUDP();
 
-    // showCpuinfo();
-    // showVersion();
-    // showUptime();
-    // uptimeSystemDate();
-    // showStats();
-    // showMeminfo();
 	waitTCPUDP(listenfd, udpfd);
+}
+
+int main() 
+{ 
+    cliente();
 }

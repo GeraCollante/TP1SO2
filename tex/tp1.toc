@@ -1,0 +1,17 @@
+\babel@toc {spanish}{}
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}Definici\IeC {\'o}n de objetivos}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Definici\IeC {\'o}n de objetivo}{2}{subsection.1.2}
+\contentsline {section}{\numberline {2}Desarrollo}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Cliente}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Servidor}{2}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Conexi\IeC {\'o}n}{2}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Funcionamiento general del algoritmo}{3}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}\texttt {login()}}{3}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}\texttt {update firmware.bin}}{3}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}\texttt {start scanning}}{3}{subsubsection.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}\texttt {obtener telemetria}}{4}{subsubsection.2.4.4}
+\contentsline {subsection}{\numberline {2.5}\texttt {Makefile}}{4}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Organizaci\IeC {\'o}n de carpetas}{4}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Compilaci\IeC {\'o}n cruzada}{4}{subsubsection.2.5.2}
+\contentsline {section}{\numberline {3}Conclusi\IeC {\'o}n}{4}{section.3}

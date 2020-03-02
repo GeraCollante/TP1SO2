@@ -16,7 +16,6 @@ void server(){
 	int sockfd;
     char buffer[MAXLINE];
     char* message = "Hello Server";
-  
 	int salir = 0;
 
 	if(logSuccess()==1)

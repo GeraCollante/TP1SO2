@@ -32,39 +32,6 @@ OBJCLIENT4 := $(SRCCLIENT4:.c=.o)
 vpath %.c $(SRC)
 vpath %.o $(SRC)
 
-# test:
-# 	@echo $(SOURCEDIRS)
-# 	@echo $(INCLUDEDIRS)
-# 	@echo $(SOURCESCLIENT)
-
-# # all: cliente $(CLIENT) servidor $(SERVER)
-# # 	@echo All done
-
-# cliente : $(SRCSCLIENT)
-# 	@echo "Compiling client..."
-# 	$(CC) -c $(CFLAGS) $^
-
-# $(CLIENT) : $(OBJSCLIENT)
-# 	@echo "Linking client..."
-# 	$(CC) -Iinclude $(SRCDIR)/$^ -o $@ 
-# 	@echo $(OBJSCLIENT)
-
-# servidor : $(SRCSSERVER)
-# 	@echo "Compiling server..."
-# 	$(CC) -c $(CFLAGS) $^
-
-# $(SERVER) : $(OBJSSERVER)
-# 	@echo "Linking server..."
-# 	$(CC) -Iinclude $(OBJSCLIENT) -o $@ 
-# 	@echo $(OBJSSERVER)
-
-# clean:
-# 	@echo "Cleaning..."
-# 	rm -rf *o client server
-
-#server:
-#	gcc -o server server.c sock_srv_tcp.c
-
 all: $(BIN)/$(CLIENT) $(BIN)/$(SERVER)
 
 .PHONY: clean
